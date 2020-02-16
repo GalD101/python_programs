@@ -6,6 +6,7 @@
 
 import sys
 import functools
+from time import sleep
 
 
 def last_early(my_str):
@@ -580,6 +581,36 @@ def get_fibo():
         current_element = next_element
         yield next_element
 
+
+def prime_number_generator():
+    yield 2
+    i = 3
+    while True:
+        if is_prime(i):
+            yield i
+        i += 2
+
+
+def gen_secs():
+    for second in range(59):
+        yield second
+
+
+def gen_minutes():
+    for minute in range(59):
+        yield minute
+
+
+def gen_hours():
+    for hour in range(23):
+        yield hour
+
+def gen_time():
+    # TODO write function
+    pass
+
+        
+
 def main():
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
     #    for word in open(file_path, 'r')])
@@ -635,7 +666,9 @@ def main():
     # print(get_names_by_length(r'C:/Users/User/Desktop/names.txt'))
     # print(first_prime_over(1000000))
     #chr((ord(i) + shift) % 26)
-    pass
+
+    for gt in gen_time():
+        print(gt)
 
 if __name__ == "__main__":
     main()
