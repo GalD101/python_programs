@@ -567,6 +567,19 @@ def permutate(seq):
         return temp_perm
 
 
+def get_fibo():
+    FIRST_ELEMENT = 0
+    SECOND_ELEMENT = 1
+    yield FIRST_ELEMENT
+    yield SECOND_ELEMENT
+    previous_element = FIRST_ELEMENT
+    current_element = SECOND_ELEMENT
+    while True:
+        next_element = previous_element + current_element
+        previous_element = current_element
+        current_element = next_element
+        yield next_element
+
 def main():
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
     #    for word in open(file_path, 'r')])
