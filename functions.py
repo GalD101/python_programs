@@ -4,6 +4,7 @@
 # -------- Self.py --------
 
 
+import datetime
 import sys
 import functools
 from time import sleep
@@ -592,24 +593,68 @@ def prime_number_generator():
 
 
 def gen_secs():
-    for second in range(59):
+    for second in range(60):
         yield second
 
 
 def gen_minutes():
-    for minute in range(59):
+    for minute in range(60):
         yield minute
 
 
 def gen_hours():
-    for hour in range(23):
+    for hour in range(24):
         yield hour
 
-def gen_time():
-    # TODO write function
-    pass
 
-        
+def gen_time():
+    for hh in gen_hours():
+        for mm in gen_minutes():
+            for sc in gen_secs():
+                yield "%02d:%02d:%02d" % (hh, mm, sc)
+
+
+def gen_years(start=datetime.datetime.now().year):
+    while True:
+        yield start
+        start += 1
+
+
+def gen_months():
+    for month in range(1, 13):
+        yield month
+
+
+def gen_days(month, leap_year=True):
+    if month in (1, 3, 5, 7, 8, 10, 12):
+        for n in range(1, 32):
+            yield n
+    elif month in (4, 6, 9, 11):
+        for n in range(1, 31):
+            yield n
+    elif month == 2:
+        if leap_year:
+            for n in range(1, 30):
+                yield n
+        else:
+            for n in range(1, 29):
+                yield n
+
+
+def gen_date():
+    leap_year = True
+    for yyyy in gen_years():
+        if yyyy % 4 == 0:
+            if yyyy % 100 == 0:
+                if yyyy % 400 != 0:
+                    leap_year = False
+        for mm in gen_months():
+            for dd in gen_days(mm, leap_year):
+                for hh in gen_hours():
+                    for mi in gen_minutes():
+                        for sc in gen_secs():
+                            yield "%02d/%02d/%02d %02d:%02d:%02d" % (dd, mm, yyyy, hh, mi, sc)
+
 
 def main():
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
@@ -667,8 +712,12 @@ def main():
     # print(first_prime_over(1000000))
     #chr((ord(i) + shift) % 26)
 
-    for gt in gen_time():
-        print(gt)
+    counter = 0
+    for gn in gen_date():
+        counter += 1
+        if counter % 100000 == 0:
+            print(gn)
+
 
 if __name__ == "__main__":
     main()
