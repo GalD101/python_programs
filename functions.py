@@ -729,12 +729,6 @@ def main():
     # print(first_prime_over(1000000))
     #chr((ord(i) + shift) % 26)
 
-    notes = "re,500-mi,500-fa,500-sol,500-mi,1000-do,500-re,1500"
-    numbers = iter(list(range(1, 101)))
-    for i in numbers:
-        print(i)
-        next(numbers)
-        next(numbers)
-
+    notes = "re,500-mi,500-fa,500-sol,500-mi,1000-do,500-re,1500"  # pylint: disable = unused-variable
 if __name__ == "__main__":
     main()

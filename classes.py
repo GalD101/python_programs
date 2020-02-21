@@ -100,9 +100,32 @@ class UnderAge(Exception):
         else:
             return message
 
+class MusicNotes():
+    notes = [55, 61.74, 65.41, 73.42, 82.41, 87.31, 98]
+    def __init__(self):
+        self._octave = 0
+        self._current_index = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self._current_index == len(self.notes):
+            self._octave += 1
+            self._current_index = 0
+
+        if self._octave > 4:
+            raise StopIteration
+        
+        self._current_index += 1
+        return self.notes[self._current_index - 1] * (2 ** self._octave)
+
+
 
 def main():
-    pass
+    notes_iter = iter(MusicNotes())
+    for freq in notes_iter:
+        print(freq)
 
 
 if __name__ == "__main__":
