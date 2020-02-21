@@ -7,6 +7,7 @@
 import datetime
 import sys
 import functools
+import winsound
 from time import sleep
 
 
@@ -656,6 +657,22 @@ def gen_date():
                             yield "%02d/%02d/%02d %02d:%02d:%02d" % (dd, mm, yyyy, hh, mi, sc)
 
 
+def play_song(notes):
+    freqs = {"la": 220,
+             "si": 247,
+             "do": 261,
+             "re": 293,
+             "mi": 329,
+             "fa": 349,
+             "sol": 392,
+             }
+    notes_and_length = (notes.split("-"))
+    for nl in notes_and_length:
+        note = nl.split(',')[0]
+        duration = int(nl.split(',')[1])
+        winsound.Beep(freqs[note], duration)
+
+
 def main():
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
     #    for word in open(file_path, 'r')])
@@ -712,12 +729,12 @@ def main():
     # print(first_prime_over(1000000))
     #chr((ord(i) + shift) % 26)
 
-    counter = 0
-    for gn in gen_date():
-        counter += 1
-        if counter % 100000 == 0:
-            print(gn)
-
+    notes = "re,500-mi,500-fa,500-sol,500-mi,1000-do,500-re,1500"
+    numbers = iter(list(range(1, 101)))
+    for i in numbers:
+        print(i)
+        next(numbers)
+        next(numbers)
 
 if __name__ == "__main__":
     main()
