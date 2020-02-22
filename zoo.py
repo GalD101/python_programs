@@ -1,4 +1,7 @@
 class Animal:
+    """
+    A class used to represent an animal
+    """
     zoo_name = "Hayaton"
 
     def __init__(self, name, hunger=0):
