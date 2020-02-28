@@ -131,13 +131,13 @@ def main():
 
     # Write the ID's to temporary files and print them
     print("Generator:")
-    for t1 in range(NUM_OF_IDS):
+    for t1 in range(NUM_OF_IDS):  # pylint: disable = unused-variable
         current_id = (next(gen))
         temp1.write(str(current_id) + "\n")
         print("\t", current_id)
 
     print("Iterator:")
-    for t2 in range(NUM_OF_IDS):
+    for t2 in range(NUM_OF_IDS):  # pylint: disable = unused-variable
         current_id = (next(itr))
         temp2.write(str(current_id) + "\n")
         print("\t", current_id)
