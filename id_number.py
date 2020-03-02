@@ -48,7 +48,7 @@ class IDIterator:
         returning the next ID till 999999999
         :raise: StopIteration raises an exception to stop the iteration
         """
-        FLAG = 999999999
+        FLAG = 999_999_999
         if self._id > FLAG:
             raise StopIteration
         while not check_id_valid(self._id):
