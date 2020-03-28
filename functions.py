@@ -673,6 +673,86 @@ def play_song(notes):
         winsound.Beep(freqs[note], duration)
 
 
+def name_to_num(username):
+    """Turns the username into its numeric value"""
+    username_num_values = [(ord(letter) - 96) for letter in username]
+    return functools.reduce((lambda x, y: x + y), username_num_values)
+
+
+def find_match(names_lst, x):
+    """Looks for a matching pair and returns if exists.
+    A matching pair means two names whose numeric
+    value sum equals to the parameter x
+    :param names_lst: a list of names
+    :param x: the desired sum
+    :type names_lst: list
+    :type x: integer
+    :return: whether or not there is a matching pair
+    :rtype: boolean
+    """
+
+    # Change the items to their numeric value
+    num_list = list(map(name_to_num, names_lst))
+    num_list.sort()  # The sort method has a time complexity of O(nlog(n))
+
+    l = 0
+    r = len(num_list) - 1
+
+    while l < r:
+        sum_of_pairs = num_list[l] + num_list[r]
+        if sum_of_pairs == x:
+            return True
+        elif sum_of_pairs < x:
+            l += 1
+        else:
+            r -= 1
+    return False
+
+
+def gcd(n, m):
+    while m:
+        n, m = m, n % m
+
+    return n
+
+
+def gcd_list(num_lst):
+    return functools.reduce(gcd, num_lst)
+
+
+def count_good(mat):
+    # Getting the number of rows and columns
+    rows = len(mat)
+    cols = len(mat[0])
+
+    # Setting the counter to an initial value of 0
+    counter = 0
+
+    for col_index in range(cols):
+
+        # Generating a list of the columns using list comperhension and getting their GCD
+        current_col = [mat[i][col_index] for i in range(rows)]
+        col_val = gcd_list(current_col)
+        for row_index in range(rows):
+            current_row = mat[row_index]
+            row_val = gcd_list(current_row)
+            if (row_val == col_val): counter += 1
+
+    return counter
+
+def sum_triangle(num_lst):
+    # TODO Write function
+    if len(num_lst) > 3:
+        sum_left = [num_lst[0] + num_lst[1]]
+        sum_right = [num_lst[-1] + num_lst[-2]]
+        num_lst[0:2] = sum_left
+        num_lst[-1:-2:-1] = sum_right # FIXME
+    
+    print(num_lst)
+
+    
+
+
 def main():
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
     #    for word in open(file_path, 'r')])
@@ -729,6 +809,16 @@ def main():
     # print(first_prime_over(1000000))
     #chr((ord(i) + shift) % 26)
 
-    notes = "re,500-mi,500-fa,500-sol,500-mi,1000-do,500-re,1500"  # pylint: disable = unused-variable
+    # notes = "re,500-mi,500-fa,500-sol,500-mi,1000-do,500-re,1500"  # pylint: disable = unused-variable
+
+    # print(find_match(['erez', 'avivit', 'ilit', 'gal', 'hana',
+    #                   'ori', 'ronen', 'yakov', 'netta', 'corona'], 44))
+
+    # my_arr = [[250, 200, 150, 100, 10], [35, 28, 21, 14, 7], [50, 6, 16, 10, 8], [82, 63, 30, 27, 9]]
+    # print(count_good(my_arr))
+
+    sum_triangle([6, 4, 5, 21, 54, 67, 32, 13])
+
+
 if __name__ == "__main__":
     main()
