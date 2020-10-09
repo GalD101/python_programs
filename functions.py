@@ -750,8 +750,6 @@ def sum_triangle(num_lst):
     
     print(num_lst)
 
-    
-
 
 def main():
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
