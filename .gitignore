@@ -1,3 +1,4 @@
 .vscode/
 selenium_driver/
 *.csv
+*.ps
