@@ -39,4 +39,45 @@ def crack_password():
 
     return final_pass
 
-print(crack_password())
+
+# fuckStart = time.time()
+# print(crack_password())
+# fuckEnd = time.time()
+# print(fuckEnd- fuckStart)
+
+
+alphabet = 'abcdefghijklmnopqrstuvwxyz'
+
+
+def encrypt(plaintext, k):
+    ciphertext = ""
+    SPACE = " "
+    length = len(alphabet)
+    for letter in plaintext:
+        if letter == SPACE:
+            ciphertext += SPACE
+            continue
+        index = alphabet.index(letter)
+        displacement = (index - k) % length
+        # while displacement > length:
+        #     displacement -= length
+        # while displacement < 0:
+        #     displacement += length
+        ciphertext += alphabet[displacement]
+    return ciphertext
+
+
+def xor_encrypt(plaintext, k):
+    # the fuck is this functions supposed to do (idk, shitty explanation by tel aviv university (they're not worthy to be written in caps))
+
+    # Assuming k and plaintext have the same length (can substitute with length = len(k))
+    length = len(plaintext)
+    xor = ""
+    for bit_index in range(length):
+        if (plaintext[bit_index] == 1 and k[bit_index] == 0) or (plaintext[bit_index] == 0 and k[bit_index] == 1):
+            xor += 1
+        else:
+            xor += 0
+
+    return xor
+
