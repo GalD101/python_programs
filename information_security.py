@@ -68,16 +68,18 @@ def encrypt(plaintext, k):
 
 
 def xor_encrypt(plaintext, k):
-    # the fuck is this functions supposed to do (idk, shitty explanation by tel aviv university (they're not worthy to be written in caps))
-
+    # NOTE: In my eyes the question was not well explained
+    # and I had to look up external resources to come with a solution of my own
+    # I didn't use enumerate nor repr (P.S if it's possible, I whould like to get the other solution)
+    
     # Assuming k and plaintext have the same length (can substitute with length = len(k))
     length = len(plaintext)
-    xor = ""
-    for bit_index in range(length):
-        if (plaintext[bit_index] == 1 and k[bit_index] == 0) or (plaintext[bit_index] == 0 and k[bit_index] == 1):
-            xor += 1
-        else:
-            xor += 0
+    encrypted_text = ""
+    for i in range(length):
+        xor = chr((ord(plaintext[i])) ^ ord(k[i]))
+        encrypted_text += xor
 
-    return xor
+    return encrypted_text
+
+print(xor_encrypt("aaaaaaaaaa", "1234567890"))
 
