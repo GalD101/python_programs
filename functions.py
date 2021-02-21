@@ -3,7 +3,8 @@
 
 # -------- Self.py --------
 
-
+import base64
+import string
 import datetime
 import sys
 import functools
@@ -751,6 +752,39 @@ def sum_triangle(num_lst):
     print(num_lst)
 
 
+def caesar_cipher_decode_hebrew(phrase):
+    hebrew = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ',
+         'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת']
+    print(len(hebrew))
+    shift = []
+    temp = ''
+    for i in range(len(hebrew)):
+        for letter in phrase:
+            if letter in hebrew:
+                shift.append(hebrew[(hebrew.index(letter) + i) % len(hebrew)])
+            else:
+                shift.append(" ")
+
+            temp = ''.join(shift)
+        print(temp, end="\n\n\n")
+
+
+def caesar_cipher_decode_english(phrase):
+    english = list(string.ascii_lowercase)
+    phrase = phrase.lower()
+    shift = []
+    temp = ''
+    for i in range(len(english)):
+        for letter in phrase:
+            if letter in english:
+                shift.append(english[(english.index(letter) + i) % len(english)])
+            else:
+                shift.append(letter)
+        shift.append("\n")
+
+    temp = ''.join(shift)
+    print(temp, end="\n\n\n")
+
 def main():
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
     #    for word in open(file_path, 'r')])
@@ -815,7 +849,21 @@ def main():
     # my_arr = [[250, 200, 150, 100, 10], [35, 28, 21, 14, 7], [50, 6, 16, 10, 8], [82, 63, 30, 27, 9]]
     # print(count_good(my_arr))
 
-    sum_triangle([6, 4, 5, 21, 54, 67, 32, 13])
+
+    # sum_triangle([6, 4, 5, 21, 54, 67, 32, 13])
+    # phrase = "תבע דשצרהא - דסשטג רכי לשזטכ יתם!"
+    # fuck(phrase)
+    
+    # print(caesar_cipher_decode_english(
+    #     "hgqqpohzCZK{m311a50_0x_a1rn3x3_h1ah3xf966878l}"))
+
+
+    ali_express_ssid = '8DEAF8A4D339C59FD08C283BB97BD5E0'
+    b64_decoded = base64.b64decode(ali_express_ssid)
+    arr = [240, 49, 0, 23, 192, 56, 15, 125, 253, 11, 159, 69, 15, 79, 2, 219, 205, 193, 7, 222, 193, 15, 145, 52]
+    print(b64_decoded)
+    # print(''.join(brr))
+
 
 
 if __name__ == "__main__":

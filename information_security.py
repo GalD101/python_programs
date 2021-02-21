@@ -68,10 +68,6 @@ def encrypt(plaintext, k):
 
 
 def xor_encrypt(plaintext, k):
-    # NOTE: In my eyes the question was not well explained
-    # and I had to look up external resources to come with a solution of my own
-    # I didn't use enumerate nor repr (P.S if it's possible, I whould like to get the other solution)
-    
     # Assuming k and plaintext have the same length (can substitute with length = len(k))
     length = len(plaintext)
     encrypted_text = ""
@@ -80,6 +76,5 @@ def xor_encrypt(plaintext, k):
         encrypted_text += xor
 
     return encrypted_text
-
-print(xor_encrypt("aaaaaaaaaa", "1234567890"))
+# NOTE to self: tel aviv uiversity SUCKS!
 
