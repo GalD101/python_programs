@@ -785,7 +785,65 @@ def caesar_cipher_decode_english(phrase):
     temp = ''.join(shift)
     print(temp, end="\n\n\n")
 
+def dfs_recursive(i, j, matrix, visited):
+    print(matrix[i][j])
+    visited[i][j] = True
+    if i > 0 and not visited[i - 1][j]:
+        return(dfs_recursive(i - 1, j, matrix, visited))
+    if i < len(matrix) - 1 and not visited[i + 1][j]:
+        return(dfs_recursive(i + 1, j, matrix, visited))
+    if j > 0 and not visited[i][j - 1]:
+        return(dfs_recursive(i, j - 1, matrix, visited))
+    if j < len(matrix[i]) - 1 and not visited[i][j + 1]:
+        return(dfs_recursive(i, j + 1, matrix, visited))
+    for m in range(len(matrix)):
+        for n in range(len(matrix[i])):
+            # not visited?
+            if not visited[m][n]:
+                visited = dfs_recursive(m, n, matrix, visited)
+
+    return matrix
+
+
+def traverse_node(i, j, matrix, visited):
+    nodes_to_explore = [[i, j]]
+    while len(nodes_to_explore):
+        current_node = nodes_to_explore.pop()
+        i = current_node[0]
+        j = current_node[1]
+        if visited[i][j]:
+            continue
+        visited[i][j] = True
+        unvisited_neighbours = get_unvisited_neighbours(i, j, matrix, visited)
+        for neighbour in unvisited_neighbours:
+            nodes_to_explore.append(neighbour)
+        print(matrix[current_node[0]][current_node[1]])
+
+def get_unvisited_neighbours(i, j, matrix, visited):
+    unvisited_neighbours = []
+    if i > 0 and not visited[i - 1][j]:
+        unvisited_neighbours.append([i - 1, j])
+    if i < len(matrix) - 1 and not visited[i + 1][j]:
+        unvisited_neighbours.append([i + 1, j])
+    if j > 0 and not visited[i][j - 1]:
+        unvisited_neighbours.append([i, j - 1])
+    if j < len(matrix[i]) - 1 and not visited[i][j + 1]:
+        unvisited_neighbours.append([i, j + 1])
+    return unvisited_neighbours
+
+
 def main():
+    my_matrix = \
+    [[0, 1, 2, 3],
+    [4, 5, 6, 7],
+    [8, 9, 10, 11]]
+    copy_matrix = my_matrix
+    my_visited = [[False for value in row] for row in my_matrix]
+    copy_visited = [[False for value in row] for row in copy_matrix]
+    print("ITERATIVELY:")
+    traverse_node(0, 0, my_matrix, my_visited)
+    print("RECURSIVELY:")
+    dfs_recursive(0, 0, copy_matrix, copy_visited)
     # return functools.reduce(lambda a, b: a + b, [len(word) - 1 if word[-1] == '\n' else len(word) \
     #    for word in open(file_path, 'r')])
     # 8.2.1
@@ -858,10 +916,10 @@ def main():
     #     "hgqqpohzCZK{m311a50_0x_a1rn3x3_h1ah3xf966878l}"))
 
 
-    ali_express_ssid = '8DEAF8A4D339C59FD08C283BB97BD5E0'
-    b64_decoded = base64.b64decode(ali_express_ssid)
-    arr = [240, 49, 0, 23, 192, 56, 15, 125, 253, 11, 159, 69, 15, 79, 2, 219, 205, 193, 7, 222, 193, 15, 145, 52]
-    print(b64_decoded)
+    # ali_express_ssid = '8DEAF8A4D339C59FD08C283BB97BD5E0'
+    # b64_decoded = base64.b64decode(ali_express_ssid)
+    # arr = [240, 49, 0, 23, 192, 56, 15, 125, 253, 11, 159, 69, 15, 79, 2, 219, 205, 193, 7, 222, 193, 15, 145, 52]
+    # print(b64_decoded)
     # print(''.join(brr))
 
 
