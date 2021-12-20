@@ -798,7 +798,6 @@ def dfs_recursive(i, j, matrix, visited):
         return(dfs_recursive(i, j + 1, matrix, visited))
     for m in range(len(matrix)):
         for n in range(len(matrix[i])):
-            # not visited?
             if not visited[m][n]:
                 visited = dfs_recursive(m, n, matrix, visited)
 
