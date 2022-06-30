@@ -3,6 +3,7 @@ def square_and_multiply(b: int, e: int, m: int) -> int:
     finds the solution to the equation b^e mod(m) fast
     using the square and multiply algorithm
     checkout https://youtu.be/cbGB__V8MNk 
+    (does the same as pow with 3 parameters)
     """
     binary_exponent = str(bin(e))[2::]
     final_result = 1
