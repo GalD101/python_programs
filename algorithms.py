@@ -15,5 +15,13 @@ def square_and_multiply(b: int, e: int, m: int) -> int:
             final_result %= m
     return final_result
 
-print(square_and_multiply(23, 373, 747))
-print(square_and_multiply(3, 45, 7))
+def lfsr():
+    state = (1 << 127 ) | 1
+    while True:
+        print(state & 1, end='', flush=True)
+        newbit = (state ^ (state >> 1) ^ (state >> 2) ^ (state >> 7))
+        state = (state >> 1) | (newbit << 127)
+
+lfsr()
+# print(square_and_multiply(23, 373, 747))
+# print(square_and_multiply(3, 45, 7))
