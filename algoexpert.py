@@ -55,9 +55,21 @@ def isValidSubsequence(array, sequence):
         
     return True
 
-print(isValidSubsequence([5, 1, 22, 25, 6, -1, 8, 10],
-      [10]))
 
+def isValidSubsequenceV2(array, sequence):
+    for seq in sequence:
+        if seq in array:
+            # Adding ' + 1' due to the incluse behaviour of slice (i.e. [x::])
+            index_to_slice = array.index(seq) + 1
+            array = array[index_to_slice::]
+        else:
+            return False
+    return True
+
+
+
+print(isValidSubsequenceV2([5, 1, 22, 25, 6, -1, 8, 10],
+      [5, 1, 25, 22, 6, -1, 8, 10]))
 
 # print(largestRange([
 #     19,
