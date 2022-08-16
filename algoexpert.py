@@ -67,9 +67,64 @@ def isValidSubsequenceV2(array, sequence):
     return True
 
 
+graph = {
+    '5': ['3', '7'],
+    '3': ['2', '4'],
+    '7': ['8'],
+    '2': [],
+    '4': ['8'],
+    '8': []
+}
 
-print(isValidSubsequenceV2([5, 1, 22, 25, 6, -1, 8, 10],
-      [5, 1, 25, 22, 6, -1, 8, 10]))
+
+def riverSizes(matrix):
+    sizes = []
+    visited = [[False for val in row] for row in matrix]
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            current = matrix[i][j]
+            if visited[i][j]:
+                continue
+            visited[i][j] = True
+            if current == 0:
+                continue
+            # if current == 1:
+            size = explore_neighbors(i, j, matrix, visited)
+            sizes.append(size)
+    return sizes
+
+
+def explore_neighbors(i, j, matrix, visited, size=1):
+    if (i != 0) and (matrix[i - 1][j] == 1) and not(visited[i - 1][j]):  # Left
+        size += 1
+        visited[i - 1][j] = True
+        size = explore_neighbors(i - 1, j, matrix, visited, size)
+    if (j != 0) and (matrix[i][j - 1] == 1) and not(visited[i][j - 1]):  # Above
+        size += 1
+        visited[i][j - 1] = True
+        size = explore_neighbors(i, j - 1, matrix, visited, size)
+    if ((i + 1) != len(matrix)) and (matrix[i + 1][j] == 1) and not(visited[i + 1][j]):  # Right
+        size += 1
+        visited[i + 1][j] = True
+        size = explore_neighbors(i + 1, j, matrix, visited, size)
+    if ((j + 1) != len(matrix[0])) and (matrix[i][j + 1] == 1) and not(visited[i][j + 1]):  # Below
+        size += 1
+        visited[i][j + 1] = True
+        size = explore_neighbors(i, j + 1, matrix, visited, size)
+    return size
+
+
+riverSizes([
+    [1, 0, 0, 1, 0],
+    [1, 0, 1, 0, 0],
+    [0, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1],
+    [1, 0, 1, 1, 0]
+])
+
+
+# print(isValidSubsequenceV2([5, 1, 22, 25, 6, -1, 8, 10],
+#       [5, 1, 25, 22, 6, -1, 8, 10]))
 
 # print(largestRange([
 #     19,
