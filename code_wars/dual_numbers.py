@@ -113,8 +113,11 @@ class R_e:
     def __pow__(self, n):
         #n is a "real" (float... or could even be "complex" actually) number, but not necessarily an integer
         #Note: in this Kata, it is assumed we are working on R (or C) i.e. a commutative structure: the power of an element of the R_e class can thus be defined in the "obvious (direct) way" (see description for Dual Numbers' behaviour), without needing recursion...
-        real    = pow(self.real, n)
-        epsilon = (n * pow(self.real, n - 1) * self.epsilon)
+        real = pow(self.real, n)
+        try:
+            epsilon = (n * pow(self.real, n - 1) * self.epsilon)
+        except ZeroDivisionError:
+            epsilon = 0
         return R_e(real, epsilon)
 
 
@@ -124,49 +127,15 @@ def deriv(f, n=1):
     #such as "lambda x : 1", but this can easily be "shortcut" by a "little trick"^^)
     #...But for God's sake, do NOT try to implement the barbaric "approximation method"!!
     #Use R_e !..
-    if n == 0:
+
+    # function returns a constant if and only if it returns a type that is not R_e()
+    # if the constant is non zero than it can still be differentiated
+    if n == 0  or f(R_e(1 ,1)) == 0:
         return f
+    if type(f(R_e(1, 1))) != R_e: # its a normal number (not R_e)
+        return lambda x: 0
     try:
         ((f(R_e(0, 1)))).epsilon
-    except:
+    except (AttributeError, NameError):
         return deriv(lambda x: ((f(R_e(x, 1)))), n - 1)
     return deriv(lambda x: ((f(R_e(x, 1)))).epsilon, n - 1)
-
-# deriv(lambda x: x**2)
-
-# assert R_e(5), R_e(5, 0)
-
-# assert R_e(5,6) == R_e(5,6) , True
-# assert not (R_e(5,6) == R_e(5,7))
-# assert not (R_e(5,6) == R_e(6,6))
-# assert not (R_e(5,6) == 5)
-# assert R_e(5) == 5
-# assert 5 == R_e(5)
-
-# assert 5 + R_e(10,20) == R_e(15, 20)
-# assert R_e(10,20)+6 == R_e(16, 20)
-# assert R_e(1,5)+R_e(6,-7) == R_e(7, -2)
-
-# assert -R_e(1,2) == R_e(-1, -2)
-
-# assert 1-R_e(2,3) == R_e(-1, -3)
-# assert R_e(2,3) - 1 == R_e(1, 3)
-# assert R_e(3,4) - R_e(5,10) == R_e(-2, -6)
-
-# assert 10*R_e(3,4) == R_e(30, 40)
-# assert R_e(2,3)*5 == R_e(10, 15)
-# assert R_e(3,4)*R_e(5,6) == R_e(15, 38)
-# assert R_e(0,5)*R_e(0,12) == R_e(0, 0)
-# assert R_e(1,5)*R_e(1,-5) == R_e(1, 0)
-
-# assert 1/R_e(1,10) == R_e(1.0, -10.0)
-# assert 1/R_e(5,10) == R_e(0.2, -0.4)
-# assert R_e(5,10)/5 == R_e(1.0, 2.0)
-# assert R_e(5,10)/R_e(5,-10) == R_e(1.0, 4.0)
-
-
-# assert R_e(1,10)**(-1) == R_e(1.0, -10.0)
-# assert R_e(5,-10)**2 == R_e(25, -100)
-# assert R_e(25, -100)**0.5 == R_e(5.0, -10.0)
-# assert R_e(1,3)**3 == R_e(1, 9)
-# assert R_e(1, 9)**(1/3) == R_e(1.0, 3.0)
