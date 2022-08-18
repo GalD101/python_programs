@@ -20,7 +20,7 @@ class R_e:
         #Dual numbers are considered to be "equal" iff they have the same "real part", as well as the same "epsilon part"
         #(also let's define some equalities between reals and Duals,
         #saying that that "R_e(a) == a"... :) [since __eq__ DOES "work nicely" in "both directions"...] )
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = self.real == other
             epsilon = self.epsilon == 0
         else:  # It's of type R_e
@@ -29,7 +29,7 @@ class R_e:
         return (real and epsilon)
 
     def __add__(self, other):
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = self.real + other
             epsilon = self.epsilon
         else:  # It's of type R_e
@@ -39,7 +39,7 @@ class R_e:
 
     def __radd__(self, other):
         #Obviously assumes commutativity for addition
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = self.real + other
             epsilon = self.epsilon
         else:  # It's of type R_e
@@ -51,7 +51,7 @@ class R_e:
         return R_e(-self.real, -self.epsilon)
 
     def __sub__(self, other):
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = self.real - other
             epsilon = self.epsilon
         else:  # It's of type R_e
@@ -60,7 +60,7 @@ class R_e:
         return R_e(real, epsilon)
 
     def __rsub__(self, other):
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = other - self.real
             epsilon = -self.epsilon
         else:  # It's of type R_e
@@ -69,7 +69,7 @@ class R_e:
         return R_e(real, epsilon)
 
     def __mul__(self, other):
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = self.real * other
             epsilon = self.epsilon * other
         else:  # It's of type R_e
@@ -78,7 +78,7 @@ class R_e:
         return R_e(real, epsilon)
 
     def __rmul__(self, other):
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = self.real * other
             epsilon = self.epsilon * other
         else:  # It's of type R_e
@@ -88,13 +88,13 @@ class R_e:
 
     def __truediv__(self, other):
         # case 2: (a + be) / n where n is a real number and (a + be) is R_e
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real = self.real / other
             epsilon = self.epsilon / other
         
         # case 3: (a + be) / (c + de) where (a + be) and (c + de) are R_e
         else:
-            numerator = R_e(self.real * other.real, -(self.real * other.epsilon * 2)) # TODO: figure out why I need to multiply by 2
+            numerator = self * R_e(other.real, -other.epsilon)
             denominator = other.real * other.real
             result = numerator / denominator # numerator.__truediv__(denominator)
             return result
@@ -102,7 +102,7 @@ class R_e:
 
     def __rtruediv__(self, other):
         # case 1: n / (a + be) where n is a real number and (a + be) is R_e
-        if type(other) in [int, float]:
+        if type(other) in [int, float, complex]:
             real    = other / self.real
             epsilon = - ((other * self.epsilon) / (self.real * self.real))
         else:  # It's of type R_e
@@ -124,15 +124,14 @@ def deriv(f, n=1):
     #such as "lambda x : 1", but this can easily be "shortcut" by a "little trick"^^)
     #...But for God's sake, do NOT try to implement the barbaric "approximation method"!!
     #Use R_e !..
-    # return lambda x: f(R_e(n, x)) - f(n)
-    return lambda x: (f(x + n*R_e(0, 1))).epsilon
+    if n == 0:
+        return f
+    try:
+        ((f(R_e(0, 1)))).epsilon
+    except:
+        return deriv(lambda x: ((f(R_e(x, 1)))), n - 1)
+    return deriv(lambda x: ((f(R_e(x, 1)))).epsilon, n - 1)
 
-
-for i in range(5):
-    print("DER = ", end="")
-    print(deriv(lambda x: 3*x**2 + 2*x + 1)(i), end=" ")
-    print("EXP = ", end="")
-    print((lambda x: 6*x + 2)(i))
 # deriv(lambda x: x**2)
 
 # assert R_e(5), R_e(5, 0)
