@@ -6,13 +6,13 @@ def knapsack(capacity, items):
     solution = [0 for _ in items] # hashmap
     item_counter = 0
     
-    while capacity > 0 and len(ratio) != 0:
+    while capacity > 0 and max(ratio) != -1:
         biggest_index = ratio.index(max(ratio))
         best_item_weight, best_item_value = items[biggest_index] # (w, v) tuple
         while capacity - best_item_weight >= 0:
             capacity -= best_item_weight
             item_counter += 1
-        ratio.pop(biggest_index)
+        ratio[biggest_index] = -1
         solution[biggest_index] = item_counter
         item_counter = 0
         
