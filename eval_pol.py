@@ -18,6 +18,27 @@ def eval_by_division(a, x):
     return a[0] + x * q[0]
 
 
+
+def get_coefficients_from_roots_vieta(roots: list):
+    n = len(roots)
+    coefficients = [0 for _ in range(n)]
+    coefficients.append(1)
+    sign = -1
+    for j in range(n):
+        ans = 0
+        for i in range(n):
+            term = roots[i]
+            for k in range(i, j):
+                term *= roots[k+1]
+            ans += term
+        print(ans)
+        ans *= sign
+        sign *= -1
+        coefficients[n - 1 - j] = ans
+
+    return coefficients
+
+
 # Lagrange interpolation (O(n^2)):
 
 def interpolate_lagrange(points: tuple) -> list:
@@ -44,9 +65,10 @@ def interpolate_lagrange(points: tuple) -> list:
             ans += term
         ans *= sign * b_coefficients[n - 1]
         sign *= -1
+        b_coefficients[n - 1 - j] = b_coefficients[n - 1]*sign*ans
 
-
-    b_coefficients[n - 1 - j] = b_coefficients[n - 1]*sign*()
+    for l in range(len(b_coefficients)):
+        print(b_coefficients[l])
 
     q = [0 for _ in range(n - 1)]  # O(n)
     h = [0 for _ in range(n - 1)]  # O(n)
@@ -55,5 +77,6 @@ def interpolate_lagrange(points: tuple) -> list:
     for k in range(n - 1):  # O(n)
         for j in range(n):  # O(n)
             if j != k:
-                h[k] *= (points[k] - points[j])
+                h[k] *= (points[k][0] - points[j][0])
+
         # Calculate q:
