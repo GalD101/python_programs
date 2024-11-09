@@ -77,12 +77,21 @@ def lagrange_interpolation(points:list[tuple]):
                 factors[k] /= (x_values[k] - x_values[j])
 
     ans = [0] * n
-    for i in range(len(nominator)):
-        ans[i] = factors[i] * nominator[i]
+    new_nominator = [[] for _ in range(n)]
+    for i in range(n):
+        new_nominator[i] = [nominator[i][k] * factors[i] for k in range(n)]
+
+    ans = [0] * n
+    for i in range(len(new_nominator)):
+        for j in range(len(new_nominator[i])):
+            ans[i] += new_nominator[j][i]
     return ans
 
 
-lagrange_interpolation([(0, 1), (1, 6), (2, 17)])
+
+print("AAAAAAAAAAAAAAAAAAAA")
+print(lagrange_interpolation([(1, 2), (2, 3), (3, 5)]))
+print("AAAAAAAAAAAAAAAAAAAA")
 
 
 
