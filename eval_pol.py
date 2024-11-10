@@ -5,6 +5,7 @@ def horner(a, x):
         p = a[i] + x * p
     return p
 
+
 # evaluate by dividing by x-x_0 and calculating the remainder (30.1-2 in the book):
 
 
@@ -47,15 +48,15 @@ def multiply_polynomial_by_linear(poly, x_0):
     # i takes care of the term wih x and i+1 the term without x
 
     for i in range(n):
-        result[i] += poly[i] # term with x
-        result[i + 1] += poly[i] * x_0*-1 # term without x
+        result[i] += poly[i]  # term with x
+        result[i + 1] += poly[i] * x_0 * -1  # term without x
     return result
 
 
-print(construct_product_polynomial([1, 2, 3,4, 5]))
+print(construct_product_polynomial([1, 2, 3, 4, 5]))
 
 
-def lagrange_interpolation(points:list[tuple]):
+def lagrange_interpolation(points: list[tuple]):
     n = len(points)
 
     x_values = [point[0] for point in points]
@@ -88,15 +89,43 @@ def lagrange_interpolation(points:list[tuple]):
     return ans
 
 
-
-print("AAAAAAAAAAAAAAAAAAAA")
-print(lagrange_interpolation([(1, 2), (2, 3), (3, 5)]))
-print("AAAAAAAAAAAAAAAAAAAA")
+import cmath
 
 
+def dft(vec: list):
+    n = len(vec)
+    ans = [0] * n
+    for k in range(n):
+        y = 0
+        for i in range(n):
+            w = cmath.exp((k) * (i) * (2 * cmath.pi * 1j) / n)
+            y += vec[i] * w
+        ans[k] = (complex(round(y.real), round(y.imag)))
+    return ans
 
 
+def before_fft(vec:list):
+    n = len(list)
+    # make n a power of 2 TODO
 
+def fft(vec: list):
+    n = len(vec)
+    if n == 1: return vec
+    w_n = cmath.exp(2*cmath.pi * 1j) / n
+    w = 1
+    vec_even = [vec[i] for i in range(n) if i & 1]
+    vec_odd = [vec[i] for i in range(n) if not (i & 1)]
+
+    y_even = fft(vec_even)
+    y_odd = fft(vec_odd)
+    y = [0] * n
+    for k in range(n//2):
+        y[k] = y_even[k] + y_odd[k]*w
+        y[int(k + n/2)] = y_even[k] - y_odd[k]*w
+        w = w*w_n
+    return y
+
+print(fft([0, 1, 2, 3]))
 
 #
 #
