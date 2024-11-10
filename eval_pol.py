@@ -53,9 +53,6 @@ def multiply_polynomial_by_linear(poly, x_0):
     return result
 
 
-print(construct_product_polynomial([1, 2, 3, 4, 5]))
-
-
 def lagrange_interpolation(points: list[tuple]):
     n = len(points)
 
@@ -104,94 +101,42 @@ def dft(vec: list):
     return ans
 
 
-def before_fft(vec:list):
+def before_fft(vec: list):
     n = len(list)
     # make n a power of 2 TODO
+
 
 def fft(vec: list):
     n = len(vec)
     if n == 1: return vec
-    w_n = cmath.exp(2*cmath.pi * 1j) / n
+    w_n = cmath.exp(2 * cmath.pi * 1j / n)
     w = 1
-    vec_even = [vec[i] for i in range(n) if i & 1]
-    vec_odd = [vec[i] for i in range(n) if not (i & 1)]
+    vec_even = vec[0::2]
+    vec_odd = vec[1::2]
 
     y_even = fft(vec_even)
     y_odd = fft(vec_odd)
-    y = [0] * n
-    for k in range(n//2):
-        y[k] = y_even[k] + y_odd[k]*w
-        y[int(k + n/2)] = y_even[k] - y_odd[k]*w
-        w = w*w_n
+    y = [0] * (n)
+
+    for k in range(n // 2):
+        y[k] = y_even[k] + w * y_odd[k]
+        y[k + (n // 2)] = y_even[k] - w * y_odd[k]
+        w = w * w_n
+
+    y = [complex(round(y_val.real), round(y_val.imag)) for y_val in y]
     return y
 
-print(fft([0, 1, 2, 3]))
 
-#
-#
-#
-# def get_coefficients_from_roots_vieta(roots: list):
-#     n = len(roots)
-#     coefficients = [0 for _ in range(n)]
-#     coefficients.append(1)
-#     sign = -1
-#     for j in range(n):
-#         ans = 0
-#         for i in range(n):
-#             term = roots[i]
-#             for k in range(i, j):
-#                 term *= roots[k+1]
-#             ans += term
-#         print(ans)
-#         ans *= sign
-#         sign *= -1
-#         coefficients[n - 1 - j] = ans
-#
-#     return coefficients
-#
-#
-# # Lagrange interpolation (O(n^2)):
-#
-# def interpolate_lagrange(points: tuple) -> list:
-#     n = len(points)
-#     if n == 1:
-#         return points[0][1]
-#
-#     # Extract the x value from the point pair (point[0] == x_i & point_i = (x_i, y_i))
-#     b_roots = [point[0] for point in points]  # O(n)
-#     b_coefficients = [0 for _ in range(n)]
-#
-#     # This is the simple case of the convolution that we were to calculate naively
-#     # (only one way to get the maximum power)
-#     b_coefficients[n - 1] = 1
-#
-#     # Now calculate the rest of b_coefficients using Vieta's formulas:
-#     sign = -1
-#     for j in range(n):
-#         ans = 0 # (n-1) - (j+1)
-#         for i in range(n):
-#             term = b_roots[i]
-#             for k in range(i, j):
-#                 term *= b_roots[k]
-#             ans += term
-#         ans *= sign * b_coefficients[n - 1]
-#         sign *= -1
-#         b_coefficients[n - 1 - j] = b_coefficients[n - 1]*sign*ans
-#
-#     for l in range(len(b_coefficients)):
-#         print(b_coefficients[l])
-#
-#     q = [0 for _ in range(n - 1)]  # O(n)
-#     h = [0 for _ in range(n - 1)]  # O(n)
-#
-#     # O(n^2):
-#     for k in range(n - 1):  # O(n)
-#         for j in range(n):  # O(n)
-#             if j != k:
-#                 h[k] *= (points[k][0] - points[j][0])
-#
-#         # Calculate q:
-#
+def find_coefficients_from_roots(roots: list):
+    n = len(roots)
+    if n == 1:
+        return [1, -roots[0]]
+    # Divide
+    half1 = roots[0:n//2]
+    half2 = roots[n//2:]
 
+    # Solve
+    sol1 = find_coefficients_from_roots(half1)
+    sol2 = find_coefficients_from_roots(half2)
 
-# print(eval_by_division([5, 4, -3, 2], -2))
+    return fft_pol_mul(sol1, sol2)
