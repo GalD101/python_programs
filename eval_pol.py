@@ -102,13 +102,18 @@ def dft(vec: list):
 
 
 def before_fft(vec: list):
-    n = len(list)
-    # make n a power of 2 TODO
+    n = len(vec)
+    # make the vector a length of a power of 2
+    while n & (n - 1) != 0:
+        vec.append(0)
+        n += 1
+    return vec
 
 
 def fft(vec: list):
     n = len(vec)
     if n == 1: return vec
+    vec = before_fft(vec)
     w_n = cmath.exp(2 * cmath.pi * 1j / n)
     w = 1
     vec_even = vec[0::2]
@@ -126,17 +131,101 @@ def fft(vec: list):
     y = [complex(round(y_val.real), round(y_val.imag)) for y_val in y]
     return y
 
+def inverse_fft(vec: list):
+    n = len(vec)
+    if n == 1: return vec
+    w_n = cmath.exp(-2 * cmath.pi * 1j / n)
+    w = 1
+    vec_even = vec[0::2]
+    vec_odd = vec[1::2]
 
-def find_coefficients_from_roots(roots: list):
-    n = len(roots)
-    if n == 1:
-        return [1, -roots[0]]
-    # Divide
-    half1 = roots[0:n//2]
-    half2 = roots[n//2:]
+    y_even = inverse_fft(vec_even)
+    y_odd = inverse_fft(vec_odd)
+    y = [0] * (n)
 
-    # Solve
-    sol1 = find_coefficients_from_roots(half1)
-    sol2 = find_coefficients_from_roots(half2)
+    for k in range(n // 2):
+        y[k] = y_even[k] + w * y_odd[k]
+        y[k + (n // 2)] = y_even[k] - w * y_odd[k]
+        w = w * w_n
 
-    return fft_pol_mul(sol1, sol2)
+    y = [complex(round(y_val.real), round(y_val.imag)) for y_val in y]
+    return y
+
+# def find_coefficients_from_roots(roots: list):
+#     n = len(roots)
+#     if n == 1:
+#         return [1, -roots[0]]
+#     # Divide
+#     half1 = roots[0:n//2]
+#     half2 = roots[n//2:]
+#
+#     # Solve
+#     sol1 = find_coefficients_from_roots(half1)
+#     sol2 = find_coefficients_from_roots(half2)
+#
+#     return fft_pol_mul(sol1, sol2)
+
+import math
+def get_num_of_special_triplets(s):
+    n = len(s)
+    num_of_special_pairs = 0
+    is_zero = [False for _ in range(n)]
+    for i in range(n):
+        if s[i] == 0:
+            is_zero[i] = True
+    for i in range(n - 2):
+        if is_zero[i]:
+            continue
+        for d in range(1, math.floor((n - i) / 2)):
+            num_of_special_pairs += int(s[i]) * int(s[i + d]) * int(s[i + 2 * d])
+    return num_of_special_pairs
+
+def get_num_of_special_triplets_using_fft(s):
+    n = len(s)
+    # add 0s to the end of the string to make the length enough to represent s^2
+    for _ in range(n):
+        s += "0"
+    s = [int(x) for x in s]
+    s = before_fft(s)
+    s = fft(s)
+    s = [x * x for x in s]
+    s = before_fft(s)
+    print(s)
+    s = inverse_fft(s)
+    s = [x.real / len(s) for x in s]
+    s = [int(round(x)) for x in s]
+
+    num_of_special_triplets = 0
+    for i in range(2 * n - 1):
+        if s[i] % 3 == 0 and s[i] != 0:
+            num_of_special_triplets += 1
+    return num_of_special_triplets
+
+# print(get_num_of_special_triplets_using_fft("10011110"))
+# print(get_num_of_special_triplets("1101110"))
+print(get_num_of_special_triplets_using_fft("111111"))
+
+def test_special_triplets():
+    test_cases = [
+        "10011110",  # Example with known output
+        "111111",  # All ones
+        "000000",  # All zeros
+        "101010",  # Alternating ones and zeros
+        "1100110011",  # Pattern with many triplets
+        "1",  # Single element
+        "101",  # Short triplet
+    ]
+
+    for s in test_cases:
+        naive_result = get_num_of_special_triplets([int(c) for c in s])
+        fft_result = get_num_of_special_triplets_using_fft(s)
+
+        print(f"Testing: {s}")
+        print(f"Naive Result: {naive_result}, FFT Result: {fft_result}")
+        assert naive_result == fft_result, f"Mismatch for input {s}"
+
+    print("All tests passed!")
+
+
+# Run the test
+test_special_triplets()
