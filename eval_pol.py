@@ -131,6 +131,7 @@ def fft(vec: list):
     y = [complex(round(y_val.real), round(y_val.imag)) for y_val in y]
     return y
 
+
 def inverse_fft(vec: list):
     n = len(vec)
     if n == 1: return vec
@@ -151,6 +152,7 @@ def inverse_fft(vec: list):
     y = [complex(round(y_val.real), round(y_val.imag)) for y_val in y]
     return y
 
+
 # def find_coefficients_from_roots(roots: list):
 #     n = len(roots)
 #     if n == 1:
@@ -166,54 +168,63 @@ def inverse_fft(vec: list):
 #     return fft_pol_mul(sol1, sol2)
 
 import math
+
+
 def get_num_of_special_triplets(s):
     n = len(s)
     num_of_special_pairs = 0
-    is_zero = [False for _ in range(n)]
-    for i in range(n):
-        if s[i] == 0:
-            is_zero[i] = True
     for i in range(n - 2):
-        if is_zero[i]:
-            continue
-        for d in range(1, math.floor((n - i) / 2)):
+        for d in range(1, math.ceil((n - i) / 2)):
             num_of_special_pairs += int(s[i]) * int(s[i + d]) * int(s[i + 2 * d])
     return num_of_special_pairs
 
+
+import numpy as np
+
+
 def get_num_of_special_triplets_using_fft(s):
     n = len(s)
-    # add 0s to the end of the string to make the length enough to represent s^2
-    for _ in range(n):
-        s += "0"
+
+    # Convert the string into a list of integers
     s = [int(x) for x in s]
-    s = before_fft(s)
-    s = fft(s)
-    s = [x * x for x in s]
-    s = before_fft(s)
-    print(s)
-    s = inverse_fft(s)
-    s = [x.real / len(s) for x in s]
-    s = [int(round(x)) for x in s]
 
-    num_of_special_triplets = 0
-    for i in range(2 * n - 1):
-        if s[i] % 3 == 0 and s[i] != 0:
-            num_of_special_triplets += 1
-    return num_of_special_triplets
+    # Pad to the next power of 2 greater than or equal to 2n-1
+    padded_length = 2 ** (math.ceil(math.log2(2 * n - 1)))
+    s += [0] * (padded_length - n)
 
-# print(get_num_of_special_triplets_using_fft("10011110"))
-# print(get_num_of_special_triplets("1101110"))
-print(get_num_of_special_triplets_using_fft("111111"))
+    # Compute FFT of the input polynomial
+    fft_s = np.fft.fft(s)
+
+    # Square the FFT-transformed array
+    fft_s_squared = [x * x for x in fft_s]
+
+    # Compute the inverse FFT to get coefficients
+    s_squared = np.fft.ifft(fft_s_squared)
+
+    # Extract real parts, round them to integers
+    s_squared = [round(x.real) for x in s_squared]
+
+    # Initialize counter
+    counter = 0
+
+    # Count special triplets based on the odd coefficients
+    for i in range(2 * n - 1):  # Only iterate over the original valid range
+        if s_squared[i] > 1 and s_squared[i] % 2 == 1:
+            counter += (s_squared[i] - 1) // 2
+
+    return counter
+
 
 def test_special_triplets():
     test_cases = [
+        "10101",  # Example with overlapping triplets
         "10011110",  # Example with known output
         "111111",  # All ones
         "000000",  # All zeros
         "101010",  # Alternating ones and zeros
         "1100110011",  # Pattern with many triplets
         "1",  # Single element
-        "101",  # Short triplet
+        "101"  # Smallest input size with a valid triplet
     ]
 
     for s in test_cases:
